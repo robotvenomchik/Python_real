@@ -3,20 +3,19 @@ import datetime
 import jwt
 
 
-def encode_token(payload:dict, time_to_be_not_avilble_minutes):
-
-
-    payload['iat']=datetime.datetime.now(datetime.timezone.utc)
-    payload['exp']=datetime.datetime.now(datetime.timezone.utc)+datetime.timedelta(seconds=time_to_be_not_avilble_minutes*60)
+def encode_token(payload: dict, time_to_be_not_avilble_minutes):
+    payload['iat'] = datetime.datetime.now(datetime.timezone.utc)
+    payload['exp'] = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+        seconds=time_to_be_not_avilble_minutes * 60)
 
     token = jwt.encode(payload, "key", algorithm='HS256')
 
     return token
 
 
-def decode_token(token: str)-> dict:
+def decode_token(token: str) -> dict:
     try:
-        decoded_file = jwt.decode( token, "key", algorithms=["HS256"])
+        decoded_file = jwt.decode(token, "key", algorithms=["HS256"])
         return decoded_file
     except jwt.exceptions.ExpiredSignatureError:
         print("token expired")
