@@ -1,12 +1,11 @@
-import time
 import datetime
 import jwt
 
 
-def encode_token(payload: dict, time_to_be_not_avilble_minutes):
+def encode_token(payload: dict, time_to_be_not_available_minutes):
     payload['iat'] = datetime.datetime.now(datetime.timezone.utc)
     payload['exp'] = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
-        seconds=time_to_be_not_avilble_minutes * 60)
+        seconds=time_to_be_not_available_minutes * 60)
 
     token = jwt.encode(payload, "key", algorithm='HS256')
 
@@ -21,7 +20,6 @@ def decode_token(token: str) -> dict:
         print("token expired")
     except jwt.InvalidTokenError:
         print("token error")
-    return decoded_file
 
 
 user_payload = {
