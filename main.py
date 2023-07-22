@@ -5,7 +5,7 @@ import jwt
 def encode_token(payload: dict, time_to_be_not_available_minutes):
     payload['iat'] = datetime.datetime.now(datetime.timezone.utc)
     payload['exp'] = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
-        seconds=time_to_be_not_available_minutes * 60)
+        minutes=time_to_be_not_available_minutes)
 
     token = jwt.encode(payload, "key", algorithm='HS256')
 
