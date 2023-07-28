@@ -1,35 +1,18 @@
+import requests
+import time
 import datetime
-import jwt
+import sys
+base_url="http://api.open-notify.org/iss-now.json"
+while True:
 
-
-def encode_token(payload: dict, time_to_be_not_available_minutes):
-    payload['iat'] = datetime.datetime.now(datetime.timezone.utc)
-    payload['exp'] = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
-        minutes=time_to_be_not_available_minutes)
-
-    token = jwt.encode(payload, "key", algorithm='HS256')
-
-    return token
-
-
-def decode_token(token: str) -> dict:
-    try:
-        decoded_file = jwt.decode(token, "key", algorithms=["HS256"])
-        return decoded_file
-    except jwt.exceptions.ExpiredSignatureError:
-        print("token expired")
-    except jwt.InvalidTokenError:
-        print("token error")
-
-
-user_payload = {
-    'user_id': 123,
-    'username': 'john_doe',
-    'role': 'admin'
-}
-
-token1 = encode_token(user_payload, 3)
-print("Закодований токен:", token1)
-
-decoded_payload = decode_token(token1)
-print("Декодований payload:", decoded_payload)
+        params = {
+            'longitude': "68.5446",
+            'latitude': "0.0905"
+        }
+        response = requests.get(url=base_url, params=params)
+        data = response.json()
+        result = f'{datetime.datetime.now()},{data["timestamp"]},{data["iss_position"]}\n'
+        print(result, end='')
+        with open(f'positions/pos.csv', 'a') as file:
+            file.write(result)
+        time.sleep(5)

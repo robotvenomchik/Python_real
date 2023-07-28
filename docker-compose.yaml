@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+  weather:
+    build: weather_app
+    restart: always
+    volumes:
+      -  C:\Users\Кирило\Documents\python\repository\weather_app\statistic:/my_code/statistics
