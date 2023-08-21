@@ -5,12 +5,14 @@ from sqlalchemy import (
     ForeignKey,
 )
 from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import Mapper
 
 from database import Base
 
 
 class BaseInfoMixin:
     id = Column(Integer, primary_key=True)
+    #id: Mapper[int] = mapped_column(primary_key=True)
     notes = Column(String(200))
     created_at = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
