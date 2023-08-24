@@ -32,7 +32,7 @@ class User(BaseInfoMixin, Base):
 class Order(BaseInfoMixin, Base):
     __tablename__ = 'order'
 
-    pizza_quantity = Column(Integer, nullable=False)
+    pizza_quantity = Column(String, nullable=False)
     pizza_price = Column(Float, nullable=False)
     customer = Column(ForeignKey('user.id'))
 
