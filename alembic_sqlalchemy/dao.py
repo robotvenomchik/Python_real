@@ -1,5 +1,4 @@
 import asyncio
-import datetime
 
 from sqlalchemy import insert, select, update, delete
 
