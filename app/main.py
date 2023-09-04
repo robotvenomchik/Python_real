@@ -3,6 +3,7 @@ from fastapi.staticfiles import StaticFiles
 import sentry_sdk
 
 from app.web_pages import router_web_pages
+from app.sockets import router_websocket
 
 
 sentry_sdk.init(
@@ -21,15 +22,17 @@ app = FastAPI(
 )
 app.mount('/app/static', StaticFiles(directory='app/static'), name='static')
 app.include_router(router_web_pages.router)
+app.include_router(router_websocket.router)
 @app.get('/')
 async def main_page():
     return {'data': 'something'}
 
 
-
+'''
 @app.get('/{user_name}')
 @app.get('/{user_name}/{user_nik}')
 async def user_page(user_name: str, user_nick: str = '', limit: int = 10, skip: int = 0) -> dict:
     data = [i for i in range(1000)]
 
     return {'user_name': user_name, 'user_nik': user_nick, 'data': data}
+'''

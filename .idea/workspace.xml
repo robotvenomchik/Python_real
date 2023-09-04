@@ -4,8 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="990fc6bd-64c0-4915-95a1-a45ae6f8afa0" name="Changes" comment="fastapi2">
+    <list default="true" id="990fc6bd-64c0-4915-95a1-a45ae6f8afa0" name="Changes" comment="fastapi3">
+      <change afterPath="$PROJECT_DIR$/app/ngrok.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/sockets/router_websocket.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/templates/messege_to_all.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/templates/menu.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/menu.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/web_pages/router_web_pages.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/web_pages/router_web_pages.py" afterDir="false" />
     </list>
@@ -42,6 +47,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Кирило\Documents\python\repository\app" />
       <recent name="C:\Users\Кирило\Documents\python\repository\app\static\images" />
       <recent name="C:\Users\Кирило\Documents\python\repository\app\static" />
       <recent name="C:\Users\Кирило\Documents\python\repository" />
