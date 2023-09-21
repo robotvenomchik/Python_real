@@ -54,9 +54,28 @@
                         <li><a class="dropdown-item" href="#">Something else here</a></li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" aria-disabled="true">Авторизація</a>
+
+
+
+               {% if user %}
+
+
+                 <li class="nav-item">
+                    <a class="nav-link" href="/web/logout">Вийти, {{ user.name }}</a>
                 </li>
+
+
+
+                {% else %}
+                 <li class="nav-item">
+                    <a class="nav-link" href="/web/about-us">Зареєструватися</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/web/login">ВВійти</a>
+                </li>
+                {% endif %}
+
+
             </ul>
             <form class="d-flex" role="search" method="post" action="/web/search">
                 <input class="form-control me-2" type="search" name="dish_name" placeholder="введіть вашу страву ..."
@@ -72,8 +91,8 @@
 {% endblock %}
 
 <script>
-    var ws = new WebSocket("ws://127.0.0.1:8000/ws/")-->
-    var ws=new Websocket("wss://1d81-188-163-80-230.ngrok-free.app/ws/")
+<!--    var ws = new WebSocket("ws://127.0.0.1:8000/ws/")-->
+    var ws = new WebSocket("wss://1d81-188-163-80-230.ngrok-free.app/ws/");
 
     ws.onmessage = function(event) {
             console.log(event)

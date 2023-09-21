@@ -13,3 +13,7 @@ class Setting:
     DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD', '')
     DATABASE_HOST = os.getenv('DATABASE_HOST', '')
     DATABASE_PORT = os.getenv('DATABASE_PORT', '')
+    MIN_PASSWORD_LENGTH = 8
+    TOKEN_SECRET=os.getenv('TOKEN_SECRET') or ''
+    TOKEN_ALGO=os.getenv('TOKEN_ALGO', '')
+

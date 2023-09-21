@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 import sentry_sdk
+from app.auth import router_auth
 
 from app.web_pages import router_web_pages
 from app.sockets import router_websocket
@@ -23,6 +24,8 @@ app = FastAPI(
 app.mount('/app/static', StaticFiles(directory='app/static'), name='static')
 app.include_router(router_web_pages.router)
 app.include_router(router_websocket.router)
+app.include_router(router_auth.router)
+
 @app.get('/')
 async def main_page():
     return {'data': 'something'}
