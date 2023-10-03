@@ -1,15 +1,19 @@
 from fastapi import APIRouter, status, HTTPException, Request, Response, Depends
 
 from . import dependencies
+import requests
+
 from .auth_lib import AuthHandler, AuthLibrary
 from .schemas import AuthDetails, AuthRegistred, AuthLogin
 import dao
 
+import telebot
 router = APIRouter(
     prefix="/auth",
     tags=['auth']
 
 )
+
 
 
 @router.post('/register', response_model=AuthRegistred, status_code=status.HTTP_201_CREATED)
@@ -21,6 +25,8 @@ async def register(request: Request, response: Response, auth_details: AuthDetai
             detail=f'User with email{auth_details.login} is alerady exist'
         )
     hashed_password = await AuthHandler.get_password_hash(auth_details.password)
+
+
     user_data = await dao.create_user(
         name=auth_details.name,
         login=auth_details.login,
@@ -30,7 +36,6 @@ async def register(request: Request, response: Response, auth_details: AuthDetai
     token = await AuthHandler.encode_token(user_data[0])
     response.set_cookie(key='my_name', value='Vasyl', max_age=10, httponly=True)
     response.set_cookie(key='token', value=token, httponly=True)
-
     return AuthRegistred(success=True, id=user_data[0], login=user_data[1])
 
 

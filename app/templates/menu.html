@@ -9,6 +9,20 @@
 {% block content %}
 
 
+{% if categories %}
+    <h3>Categories</h3>
+    <div class="container-fluid", style="padding: 10px">
+        <div class="row">
+            <div>
+                {%for c in categories%}
+                    <a type="button" href="/web/by_category/{{ c.value }}" class="btn btn-primary" style="margin: 2px">{{ c.value }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endif %}
+
 <p class="h1">{{ title }}</p>
 
 

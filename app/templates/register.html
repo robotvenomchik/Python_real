@@ -12,22 +12,22 @@
 
     <div class="mb-3">
       <label for="login" class="form-label">Логін</label>
-      <input type="email"  class="form-control" id="login" required placeholder="name@example.com">
+      <input type="email" name="login"  class="form-control" id="login" required placeholder="name@example.com">
     </div>
 
         <div class="mb-3">
       <label for="password" class="form-label">Пароль</label>
-      <input type="password"  class="form-control" id="password" required minlength="{{ min_password_length }}">
+      <input type="password" name="password"  class="form-control" id="password" required minlength="{{ min_password_length }}">
     </div>
 
     <div class="mb-3">
       <label for="name" class="form-label">Ім я</label>
-      <input type="text"  class="form-control" id="name" required minlength="{{ min_password_length }}">
+      <input type="text" name="name" class="form-control" id="name" required minlength="{{ min_password_length }}">
     </div>
 
     <div class="mb-3">
       <label for="notes" class="form-label">Примітки</label>
-      <input type="text"  class="form-control" id="notes">
+      <input type="text" name="notes"  class="form-control" id="notes">
     </div>
 
 

