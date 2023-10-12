@@ -1,5 +1,6 @@
 import asyncio
 
+from pydantic import EmailStr
 from sqlalchemy import insert, select, update, delete
 
 from database import async_session_maker
@@ -43,6 +44,8 @@ async def get_user_by_id(user_id: int):
         #print(result.first())
         #print(result.scalar_one_or_none())
         return result.scalar_one_or_none()
+
+
 async def get_user_by_login(user_login: str):
     async with async_session_maker() as session:
         query = select(User).filter_by(login=user_login)
@@ -53,12 +56,32 @@ async def get_user_by_login(user_login: str):
         return result.scalar_one_or_none()
 
 
+
+async def get_id_by_login(user_login: str):
+    async with async_session_maker() as session:
+        query = select(User.id).filter_by(login=user_login)
+        #print(query)
+        result = await session.execute(query)
+        #print(result.first())
+        #print(result.scalar_one_or_none())
+        return int(result)
+
+
 async def update_user(user_id: int):
     async with async_session_maker() as session:
         query = update(User).where(User.id == user_id).values(name='Vasja')
         #print(query)
         await session.execute(query)
         await session.commit()
+
+
+async def update_user_data(*, user_id: int, params: dict):
+    async with async_session_maker() as session:
+        query = update(User).where(User.id == user_id).values(**params)
+        #print(query)
+        await session.execute(query)
+        await session.commit()
+
 
 
 async def delete_user(user_id: int):

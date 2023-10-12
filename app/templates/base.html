@@ -51,7 +51,12 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        {% if user %}
+                        <li><a class="dropdown-item" href="/web/change_password">Змінити пароль</a></li>
+                            {% else %}
+                        <li><a class="dropdown-item" href="#">Змінити пароль</a></li>
+
+                         {% endif %}
                     </ul>
                 </li>
 
