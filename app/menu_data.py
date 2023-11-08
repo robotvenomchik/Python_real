@@ -2,37 +2,44 @@ from enum import Enum
 
 
 class Categories(Enum):
-    CHEESE = 'З СИРОМ'
-    MEAT = 'З МЯСОМ'
-    SEAFOOD = 'З МОРЕПРОДУКТАМИ'
+    PROGRAMS = 'Програмне Забезпечення'
+    DETAILS_FOR_PC = 'Деталі для Компа'
+    ACCESORIES = 'Аксесуари'
 
 
 menu = [
     {
-        'title': 'Карбонара',
-        'image': 'image(1).png',
-        'price': 220,
-        'category': []
+        'title': 'Powerpoint_key',
+        'image': 'image(1)2.png',
+        'price': 999,
+        'category': (Categories.PROGRAMS.value)
     },
     {
-        'title': 'Папероні',
-        'image': 'image(2).png',
-        'price': 220,
-        'category': (Categories.CHEESE.value)
+        'title': 'RTX3080',
+        'image': 'image(2)1.png',
+        'price': 15699,
+        'category': (Categories.DETAILS_FOR_PC.value)
 
     },
     {
-        'title': 'Барбекю',
-        'image': 'image(3).png',
-        'price': 220,
-        'category': (Categories.CHEESE.value, Categories.MEAT.value)
+        'title': 'Intel Core i5-12400F',
+        'image': 'image(3)1.png',
+        'price': 3499,
+        'category': ( Categories.DETAILS_FOR_PC.value)
 
     },
     {
-        'title': 'Папероні з копченим м\'ясом',
-        'image': 'image(4).png',
-        'price': 220,
-        'category': (Categories.MEAT.value)
+        'title': 'Мишка RZTK S 430 USB Black',
+        'image': 'image(4)1.png',
+        'price': 799,
+        'category': (Categories.ACCESORIES.value)
 
-    }
+    },
+    {
+        'title': 'Клавіатура',
+        'image': 'image(5)1.jpg',
+        'price': 1499,
+        'category': (Categories.ACCESORIES.value)
+
+    },
 ]

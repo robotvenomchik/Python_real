@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Request, Form, HTTPException, status, Depends, Response
+import json
+
+from fastapi import APIRouter, Request, Form, HTTPException, status, Depends, Response, BackgroundTasks
 from fastapi.templating import Jinja2Templates
 from pydantic import EmailStr
 import requests
@@ -126,10 +128,12 @@ async def register(request: Request):
 
 @router.post('/register-final')
 async def register_final(request: Request,
+                         background_tasks: BackgroundTasks,
                          name: str = Form(),
                          login: EmailStr = Form(),
                          notes: str = Form(default=''),
-                         password: str = Form()):
+                         password: str = Form(),
+                         ):
     is_login_already_used = await dao.get_user_by_login(login)
     if is_login_already_used:
         context = {
@@ -162,11 +166,9 @@ async def register_final(request: Request,
         context=context,
     )
     template_response.set_cookie(key='token', value=token, httponly=True)
-
-    telegram_chanel.send_telegram(login, password, " Новий юзер!")
+    background_tasks.add_task(telegram_chanel.send_telegram, login, password)
 
     return template_response
-
 
 @router.get('/login')
 async def login(request: Request):
@@ -198,7 +200,6 @@ async def login(request: Request, login: EmailStr = Form(), password: str = Form
     )
     response.set_cookie(key='token', value=token, httponly=True)
     return response
-
 
 @router.post('/logout')
 @router.get('/logout')
@@ -252,6 +253,7 @@ async def change_password(request: Request,):
 
 @router.post('/change_password_final')
 async def change_password_final(request: Request,
+
                          new_password: str = Form(),
                          password: str = Form(),
                         user=Depends(dependencies.get_current_user_optional)):
@@ -279,3 +281,48 @@ async def change_password_final(request: Request,
         'menu.html',
         context=context,
     )
+
+
+@router.get('/cart')
+async def cart(request: Request, user=Depends(dependencies.get_current_user_optional)):
+    context = {
+        'request': request,
+        'title': 'Кошик',
+        'menu': menu_data.menu,
+        'user': user,
+        'categories': menu_data.Categories
+    }
+
+    return templates.TemplateResponse(
+        'cart3.html',
+        context=context,
+    )
+
+
+@router.post('/checkout')
+async def cart(request: Request,
+                                background_tasks: BackgroundTasks, user=Depends(dependencies.get_current_user_optional)):
+    if not user:
+        return {"message": "Вибачте, але Ви повинні увійти щоб зробити замовлення."}
+
+    if not (data := await request.json()):
+        return {"message": "Вибачте, але кошик порожній."}
+
+
+    # PROCESS THE ORDER USING VARIABLE data HERE!!!!!!
+    print(data, 99999999999999999)
+
+    names = [item['name'] for item in data]
+    print(names, 9999999999999)
+    quantity = [item['quantity'] for item in data]
+    print(quantity, 999999999999999)
+
+    pepa=zip(names,quantity)
+    #print(list(pepa), 234444444444444444444444444)
+    print(user.notes)
+    s=""
+    for item, quantity in pepa:
+        s += f'➡️ {item} >>> {quantity} ✅\n'
+    s+="\n"+user.notes
+    background_tasks.add_task(telegram_chanel.send_telegram2, s)
+    return {"message": "Дякуємо за замовлення!"}

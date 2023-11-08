@@ -4,14 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="990fc6bd-64c0-4915-95a1-a45ae6f8afa0" name="Changes" comment="proxy4">
-      <change afterPath="$PROJECT_DIR$/app/telegram_chanel.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/templates/change_password.html" afterDir="false" />
+    <list default="true" id="990fc6bd-64c0-4915-95a1-a45ae6f8afa0" name="Changes" comment="change_password is working">
+      <change afterPath="$PROJECT_DIR$/app/static/images/image(1)2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/static/images/image(2)1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/static/images/image(3)1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/static/images/image(4)1.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/auth/router_auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/auth/router_auth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/menu_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/menu_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/static/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/app/static/favicon.ico" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/static/images/image(1).png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/static/images/image(2).png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/static/images/image(3).png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/static/images/image(4).png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/telegram_chanel.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/telegram_chanel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/about_us.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/about_us.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/map.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/map.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/menu.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/menu.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/register.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/web_pages/router_web_pages.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/web_pages/router_web_pages.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/dao.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +61,8 @@
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;project1__super&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Кирило/Documents/python/repository – копія&quot;
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Кирило/Documents/python/repository – копія&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -58,11 +72,11 @@
       <recent name="C:\Users\Кирило\Documents\python\repository\app" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Кирило\Documents\python\repository – копія\app\static" />
+      <recent name="C:\Users\Кирило\Documents\python\repository – копія\app\static\images" />
       <recent name="C:\Users\Кирило\Documents\python\repository\app\templates" />
       <recent name="C:\Users\Кирило\Documents\python\repository" />
       <recent name="C:\Users\Кирило\Documents\python\repository\app\auth" />
-      <recent name="C:\Users\Кирило\Documents\python\repository\app" />
-      <recent name="C:\Users\Кирило\Documents\python\repository\app\static\images" />
     </key>
   </component>
   <component name="RunManager">
@@ -142,7 +156,15 @@
       <option name="project" value="LOCAL" />
       <updated>1695310173874</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="change_password is working">
+      <option name="closed" value="true" />
+      <created>1697132268634</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1697132268634</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -161,6 +183,7 @@
     <MESSAGE value="fastapi2" />
     <MESSAGE value="proxy1" />
     <MESSAGE value="proxy4" />
-    <option name="LAST_COMMIT_MESSAGE" value="proxy4" />
+    <MESSAGE value="change_password is working" />
+    <option name="LAST_COMMIT_MESSAGE" value="change_password is working" />
   </component>
 </project>

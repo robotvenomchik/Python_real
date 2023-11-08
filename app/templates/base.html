@@ -25,8 +25,8 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
 
-        <img src="{{ url_for('static', path='images/image(1).png') }}" alt="" width="35" height="35">
-        <div class="navbar-brand">Pizza Mamma Mia</div>
+        <img src="{{ url_for('static', path='images/image(1)2.png') }}" alt="" width="35" height="35">
+        <div class="navbar-brand">Internet shop</div>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +54,6 @@
                         {% if user %}
                         <li><a class="dropdown-item" href="/web/change_password">Змінити пароль</a></li>
                             {% else %}
-                        <li><a class="dropdown-item" href="#">Змінити пароль</a></li>
 
                          {% endif %}
                     </ul>
@@ -83,7 +82,7 @@
 
             </ul>
             <form class="d-flex" role="search" method="post" action="/web/search">
-                <input class="form-control me-2" type="search" name="dish_name" placeholder="введіть вашу страву ..."
+                <input class="form-control me-2" type="search" name="dish_name" placeholder="введіть продукт ..."
                        aria-label="Search" required minlength="3">
                 <button class="btn btn-outline-success" type="submit">Пошук</button>
             </form>

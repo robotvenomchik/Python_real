@@ -1,0 +1,327 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>{{ title }}</title>
+{% endblock %}
+
+
+{% block content %}
+<p class="h1">{{ title }}</p>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-6 col-xs-12">
+      <h4 class="badge-pill badge-light mt-3 mb-3 p-2 text-center">Товари</h4>
+      <div class="row">
+
+        {% for i in menu %}
+        <div class="col-sm-6 col-md-6 col-lg-6 col-xs-6">
+          <div class="shadow-sm card mb-3 product">
+            <img class="product-img" src="../static/images/{{i.image}}" alt="{{i.title}}" onmouseover="animateImg(this)"
+              onmouseout="normalImg(this)" />
+            <div class="card-body">
+              <h5 class="card-title text-info bold product-name">{{i.title}}</h5>
+              <p class="card-text text-success product-price">{{i.price}} грн</p>
+              <button class="btn btn-primary" type="button" data-action="add-to-cart"
+                id="add-to-cart-{{i.title}}">Додати в кошик</button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-6 col-xs-12">
+      <h4 class="badge-pill badge-light mt-3 mb-3 p-2 text-center">Кошик</h4>
+      <div class="cart-items"></div>
+      <div class="cart-footer"></div>
+    </div>
+  </div>
+</div>
+
+
+<script defer>
+  "use strict";
+  function getCookie(name) {
+    var parts = ("; " + document.cookie).split("; " + name + "=");
+
+    if (parts.length === 2) {
+      return parts.pop().split(";").shift();
+    }
+  }
+
+  let cookies = decodeURIComponent(getCookie("cart"));
+  let cart = [];
+  if (cookies && cookies != "undefined" && cookies != "" && cookies != "{}" && cookies != "[]") {cart = JSON.parse(cookies);console.log(cookies)};
+
+  let cartTotal = 0;
+
+  const cartDom = document.querySelector(".cart-items");
+
+  if (cart.length != 0)
+  cart.forEach(product => {
+    cartTotal += product.price * product.quantity;
+    let addToCartButtonDOM = document.getElementById("add-to-cart-" + product.name);
+    addToCartButtonDOM.innerText = "В кошику";
+    addToCartButtonDOM.disabled = true;
+    cartDom.insertAdjacentHTML("beforeend", `
+  <div class="d-flex flex-row shadow-sm card cart-items mt-2 mb-3 animated flipInX">
+    <div class="p-2">
+        <img src="${product.img}" alt="${product.name}" style="max-width: 50px;"/>
+    </div>
+    <div class="p-2 mt-3">
+        <p class="text-info cart-item-name">${product.name}</p>
+    </div>
+    <div class="p-2 mt-3">
+        <p class="text-success cart-item-price">${product.price * product.quantity}</p>
+    </div>
+    <div class="p-2 mt-3 ml-auto">
+        <button class="btn fa btn-warning" type="button" data-action="increase-item">&plus;
+    </div>
+    <div class="p-2 mt-3">
+      <p class="text-success cart_item_quantity">${product.quantity}</p>
+    </div>
+    <div class="p-2 mt-3">
+      <button class="btn fa btn-warning" type="button" data-action="decrease-item">&minus;
+    </div>
+    <div class="p-2 mt-3">
+      <button class="btn fa fa-trash btn-warning" type="button" data-action="remove-item">&times;
+    </div>
+  </div> `);
+
+
+  });
+
+  var clearCart = () => {
+    cart.forEach(product => {
+      let addToCartButtonDOM = document.getElementById("add-to-cart-" + product.name);
+      addToCartButtonDOM.innerText = "Додати в кошик";
+      addToCartButtonDOM.disabled = false;
+    });
+    cart = [];
+    document.cookie = `cart=${encodeURIComponent(JSON.stringify(cart))}; path=/; samesite=strict`;
+    cartDom.innerHTML = "";
+    document.querySelector(".cart-footer").innerHTML = "";
+  };
+
+
+  if (cart.length != 0) {
+  document.querySelector('.cart-footer').innerHTML = `
+  <div class="d-flex flex-row shadow-sm card cart-footer mt-2 mb-3 animated flipInX">
+    <div class="p-2">
+      <button class="btn btn-danger" type="button" data-action="clear-cart" onclick="clearCart();">Очистити кошик
+    </div>
+    <div class="p-2 ml-auto">
+      <button class="btn btn-success" type="button" data-action="check-out" onclick="checkOut();">Замовити <span class="order">${cartTotal}</span> грн
+        &#10137;
+    </div>
+  </div>`;
+
+  addButtonsListeners();}
+  function addButtonsListeners() {
+    const cartItemsDom = cartDom.querySelectorAll(".cart-items");
+    cartItemsDom.forEach(cartItemDom => {
+
+      let increase = cartItemDom.querySelector('[data-action="increase-item"]');
+
+
+      let increaseListener = () => {
+        cart.forEach(cartItem => {
+
+          if (cartItemDom.querySelector(".cart-item-name").innerText == cartItem.name) {
+            cartItemDom.querySelector(".cart_item_quantity").innerText = ++cartItem.quantity;
+            cartItemDom.querySelector(".cart-item-price").innerText = cartItem.quantity *
+              cartItem.price;
+
+            cartTotal += cartItem.price;
+            document.cookie = `cart=${encodeURIComponent(JSON.stringify(cart))}; path=/; samesite=strict`;
+            document.querySelector('.order').innerText = cartTotal;
+          }
+        })
+      };
+
+
+
+      let decreaseListener = () => cart.forEach(cartItem => {
+        if (cartItemDom.querySelector(".cart-item-name").innerText == cartItem.name && cartItem.quantity > 1) {
+          cartItemDom.querySelector(".cart_item_quantity").innerText = --cartItem.quantity;
+          cartItemDom.querySelector(".cart-item-price").innerText = parseInt(cartItem.quantity) *
+            parseInt(cartItem.price);
+          cartTotal -= parseInt(cartItem.price);
+          document.cookie = `cart=${encodeURIComponent(JSON.stringify(cart))}; path=/; samesite=strict`;
+          document.querySelector('.order').innerText = cartTotal;
+        }
+      });
+
+      // increase item in cart
+      increase.onclick = increaseListener;
+
+
+      let decrease = cartItemDom.querySelector('[data-action="decrease-item"]');
+
+
+      decrease.onclick = decreaseListener;
+
+
+      let remove = cartItemDom.querySelector('[data-action="remove-item"]');
+
+
+      let removeListener = () => {
+        cart.forEach(cartItem => {
+          if (cartItemDom.querySelector(".cart-item-name").innerText == cartItem.name) {
+            cartTotal -= parseInt(cartItemDom.querySelector(".cart-item-price").innerText);
+            document.querySelector('.order').innerText = cartTotal;
+            cartItemDom.remove();
+            cart = cart.filter(cartItem2 => cartItem.name !== cartItem2.name);
+            document.cookie = `cart=${encodeURIComponent(JSON.stringify(cart))}; path=/; samesite=strict`;
+            let addToCartButtonDOM = document.getElementById("add-to-cart-" + cartItemDom.querySelector(".cart-item-name").innerText);
+            addToCartButtonDOM.innerText = "Додати в кошик";
+            addToCartButtonDOM.disabled = false;
+
+            if (cart.length < 1) document.querySelector('.cart-footer').remove();
+          }
+        });
+      };
+
+      remove.onclick = removeListener;
+
+    });
+  }
+
+  document.querySelectorAll('[data-action="add-to-cart"]').forEach(addToCartButtonDOM => {
+
+    addToCartButtonDOM.onclick = () => {
+      const productDom = addToCartButtonDOM.parentNode.parentNode;
+      const product = {
+        name: productDom.querySelector(".product-name").innerText,
+        price: Number(productDom.querySelector(".product-price").innerText.replaceAll(" грн", "")),
+        quantity: 1,
+        img: productDom.querySelector(".product-img").src,
+      };
+
+      if (cart.filter(cartItem => cartItem.name === product.name).length < 1) {
+        cartDom.insertAdjacentHTML("beforeend", `
+  <div class="d-flex flex-row shadow-sm card cart-items mt-2 mb-3 animated flipInX">
+    <div class="p-2">
+        <img src="${product.img}" alt="${product.name}" style="max-width: 50px;"/>
+    </div>
+    <div class="p-2 mt-3">
+        <p class="text-info cart-item-name">${product.name}</p>
+    </div>
+    <div class="p-2 mt-3">
+        <p class="text-success cart-item-price">${product.price}</p>
+    </div>
+    <div class="p-2 mt-3 ml-auto">
+        <button class="btn fa btn-warning" type="button" data-action="increase-item">&plus;
+    </div>
+    <div class="p-2 mt-3">
+      <p class="text-success cart_item_quantity">${product.quantity}</p>
+    </div>
+    <div class="p-2 mt-3">
+      <button class="btn fa btn-warning" type="button" data-action="decrease-item">&minus;
+    </div>
+    <div class="p-2 mt-3">
+      <button class="btn fa fa-trash btn-warning" type="button" data-action="remove-item">&times;
+    </div>
+  </div> `);
+
+  document.querySelector('.cart-footer').innerHTML = `
+  <div class="d-flex flex-row shadow-sm card cart-footer mt-2 mb-3 animated flipInX">
+    <div class="p-2">
+      <button class="btn btn-danger" type="button" data-action="clear-cart" onclick="clearCart();">Очистити кошик
+    </div>
+    <div class="p-2 ml-auto">
+      <button class="btn btn-success" type="button" data-action="check-out" onclick="checkOut();">Замовити <span class="order">${cartTotal}</span> грн
+        &#10137;
+    </div>
+  </div>`;
+
+        addToCartButtonDOM.innerText = "В кошику";
+        addToCartButtonDOM.disabled = true;
+        cart.push(product);
+        cartTotal += product.price;
+        document.cookie = `cart=${encodeURIComponent(JSON.stringify(cart))}; path=/; samesite=strict`;
+
+        document.querySelector('.order').innerText = cartTotal;
+        addButtonsListeners();
+      }
+    }});
+
+
+
+  function animateImg(img) {
+    img.classList.add("animated", "shake");
+  }
+
+  function normalImg(img) {
+    img.classList.remove("animated", "shake");
+  }
+
+  function checkOut() {
+    fetch('checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cart),
+    })
+      .then(response => {
+        response.json().then(json => { alert(json.message); });
+        window.location.href = '/web/menu';
+      });
+
+  }
+
+</script>
+
+
+<style>
+  .product-name {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .product-price,
+  .cart-item-price {
+    font-style: oblique;
+    font-family: cursive;
+  }
+
+  .product-img {
+    max-width: 140px;
+    margin: 0 auto;
+  }
+
+  .card {
+    border: 1px dashed grey;
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+  }
+
+  h4 {
+    font-family: cursive;
+  }
+
+  .cart-item-name {
+    font-weight: 700;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(192, 192, 192, 0.1);
+    font-family: cursive;
+    font-size: xx-large;
+    cursor: wait;
+    letter-spacing: 0.05em;
+    text-shadow: 4px 4px 0px #d5d5d5, 7px 7px 0px rgba(0, 0, 0, 0.2);
+  }
+</style>
+
+{% endblock %}

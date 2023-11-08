@@ -6,34 +6,25 @@
 
 
 {% block content %}
-<form method="post" action="/web/register-final">
+<p class="h1">{{ title }}</p>
 
+<form method="post" action="/web/login-final">
 
     <div class="mb-3">
       <label for="login" class="form-label">Логін</label>
-      <input type="email"  class="form-control" id="login" required placeholder="name@example.com">
+      <input name="login" type="email"  class="form-control" id="login" required placeholder="name@example.com">
     </div>
 
         <div class="mb-3">
       <label for="password" class="form-label">Пароль</label>
-      <input type="password"  class="form-control" id="password" required minlength="{{ min_password_length }}">
+      <input name="password" type="password"  class="form-control" id="password" required minlength="{{ min_password_length }}">
     </div>
 
-    <div class="mb-3">
-      <label for="name" class="form-label">Ім я</label>
-      <input type="text"  class="form-control" id="name" required minlength="{{ min_password_length }}">
-    </div>
-
-    <div class="mb-3">
-      <label for="notes" class="form-label">Примітки</label>
-      <input type="text"  class="form-control" id="notes">
-    </div>
-
-
-
-    <button class="btn btn-outline-success" type="submit">Зареєструватися</button>
+    <button class="btn btn-outline-success" type="submit">{{ title }}</button>
 
 
 </form>
+
+
 
 {% endblock %}

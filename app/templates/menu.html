@@ -32,8 +32,12 @@
 <!--        <p class="h2">{{ dish['title'] }}</p>-->
         <p class="h2">{{ dish.title }}</p>
         <img src="{{ url_for('static', path='images/' + dish.image) }}" alt="" width="200" height="200">
-        <p class="h4">{{ dish.price }}</p>
+        <p class="h4">{{ dish.price }} grn</p>
         <hr>
+        {% if user %}
+        <a type="button" href="/web/cart" class="btn btn-primary" style="margin: 2px">Order {{dish.title}}</a>
+        {% endif %}
+
 
     {% endfor %}
     </ul>
